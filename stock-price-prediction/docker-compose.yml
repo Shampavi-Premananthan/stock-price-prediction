@@ -1,0 +1,32 @@
+services:
+  backend:
+    build: ./backend
+    container_name: stock-prediction-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/saved_models:/app/saved_models
+      - ./data:/app/../data
+    environment:
+      - APP_ENV=production
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+    restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: stock-prediction-ngrok
+    depends_on:
+      - backend
+    command: http backend:8000
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: stock-prediction-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
