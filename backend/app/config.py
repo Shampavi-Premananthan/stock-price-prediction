@@ -11,6 +11,12 @@ import os
 from dataclasses import dataclass, field
 from typing import List
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 
 def _split_csv(value: str) -> List[str]:
     return [v.strip() for v in value.split(",") if v.strip()]
@@ -27,6 +33,8 @@ class Settings:
     )
     model_dir: str = os.getenv("MODEL_DIR", "saved_models")
     data_cache_dir: str = os.getenv("DATA_CACHE_DIR", "../data")
+    news_api_key: str = os.getenv("NEWS_API_KEY", "577cd7d25cff488a90fefac78875c7cb")
+
 
     # Training defaults - kept conservative so a demo request on a laptop
     # CPU finishes in a reasonable time.

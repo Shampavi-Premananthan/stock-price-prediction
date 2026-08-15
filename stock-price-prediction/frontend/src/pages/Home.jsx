@@ -1,17 +1,8 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Brain, Gauge, LineChart, Newspaper, ShieldCheck } from "lucide-react";
+import { ArrowRight, Brain, Gauge, LineChart, ShieldCheck } from "lucide-react";
 import TickerTape from "../components/TickerTape.jsx";
-import NewsSentimentCard from "../components/NewsSentimentCard.jsx";
-
-const POPULAR_TICKERS = ["AAPL", "TSLA", "MSFT", "NVDA", "AMZN"];
 
 const FEATURES = [
-  {
-    icon: Newspaper,
-    title: "Real-Time News & Sentiment",
-    text: "Live headlines from NewsAPI are parsed with NLP sentiment scoring to deliver instant market consensus metrics (Bullish / Neutral / Bearish).",
-  },
   {
     icon: Brain,
     title: "Dual-model engine",
@@ -27,11 +18,14 @@ const FEATURES = [
     title: "Technical indicators",
     text: "RSI, MACD, and Bollinger Bands are computed server-side and feed the same pipeline your model trains on.",
   },
+  {
+    icon: ShieldCheck,
+    title: "Production shape",
+    text: "FastAPI backend, typed schemas, cached models, Dockerized services — built the way a real forecasting service would be.",
+  },
 ];
 
 export default function Home() {
-  const [activeTicker, setActiveTicker] = useState("AAPL");
-
   return (
     <div>
       <TickerTape />
@@ -40,14 +34,16 @@ export default function Home() {
         <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1 font-mono text-xs text-accent">
-              REAL-TIME NEWS · LSTM · RNN · MARKET DATA
+              LSTM · RNN · LIVE MARKET DATA
             </span>
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.1] text-white sm:text-5xl">
-              Forecast tomorrow's close with{" "}
-              <span className="text-accent">real-time AI & news.</span>
+              Forecast tomorrow's close from{" "}
+              <span className="text-accent">today's pattern.</span>
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-muted">
-              Quantis combines recurrent neural networks with real-time financial news sentiment analysis from NewsAPI to predict stock price movements.
+              Quantis trains recurrent neural networks on real Yahoo Finance
+              history, backtests them against held-out days, and shows you
+              exactly where the model was right — and where it wasn't.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
@@ -57,10 +53,10 @@ export default function Home() {
                 Start prediction <ArrowRight size={18} />
               </Link>
               <a
-                href="#news-sentiment"
+                href="#features"
                 className="inline-flex items-center gap-2 rounded-lg border border-line px-6 py-3.5 font-display font-semibold text-white transition-colors hover:border-accent"
               >
-                Explore Live News
+                How it works
               </a>
             </div>
           </div>
@@ -97,37 +93,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Live News Sentiment Showcase */}
-      <section id="news-sentiment" className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h2 className="font-display text-2xl font-semibold text-white">
-              Real-Time Market Sentiment
-            </h2>
-            <p className="text-sm text-muted mt-1">
-              Select a ticker to analyze breaking news headlines and aggregate market sentiment.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {POPULAR_TICKERS.map((t) => (
-              <button
-                key={t}
-                onClick={() => setActiveTicker(t)}
-                className={`px-3 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all ${
-                  activeTicker === t
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20"
-                    : "bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white"
-                }`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <NewsSentimentCard ticker={activeTicker} />
-      </section>
-
       <section id="features" className="mx-auto max-w-6xl px-6 pb-24">
         <h2 className="font-display text-2xl font-semibold text-white">
           What's under the hood
@@ -147,4 +112,3 @@ export default function Home() {
     </div>
   );
 }
-

@@ -27,8 +27,41 @@ export async function runPrediction({
   return data;
 }
 
+export async function getRealtimeQuote(ticker) {
+  const { data } = await api.get(`/api/v1/quote/${ticker}`);
+  return data;
+}
+
+export async function getNewsSentiment(ticker) {
+  const { data } = await api.get(`/api/v1/news/${ticker}`);
+  return data;
+}
+
 export function downloadUrl(path) {
   return path;
 }
 
+export function createQuoteWebSocket(ticker, onMessage, onError) {
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const host = window.location.host;
+  const wsUrl = `${protocol}//${host}/api/v1/ws/quote/${ticker}`;
+  const ws = new WebSocket(wsUrl);
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      onMessage(data);
+    } catch (err) {
+      if (onError) onError(err);
+    }
+  };
+
+  if (onError) {
+    ws.onerror = (err) => onError(err);
+  }
+
+  return ws;
+}
+
 export default api;
+

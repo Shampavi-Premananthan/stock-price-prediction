@@ -84,3 +84,39 @@ class PredictionResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     app_env: str
+
+
+class RealtimeQuoteResponse(BaseModel):
+    ticker: str
+    price: float
+    change: float
+    percent_change: float
+    day_high: float
+    day_low: float
+    open_price: float
+    previous_close: float
+    volume: int
+    timestamp: str
+
+
+class NewsArticle(BaseModel):
+    title: str
+    source: str
+    url: str
+    published_at: str
+    description: Optional[str] = None
+    sentiment_score: float = Field(description="Score between -1.0 (Bearish) and 1.0 (Bullish)")
+    sentiment_label: str = Field(description="Bullish, Bearish, or Neutral")
+
+
+class NewsSentimentResponse(BaseModel):
+    ticker: str
+    overall_sentiment: str = Field(description="Bullish, Bearish, or Neutral")
+    sentiment_score: float = Field(description="Aggregate sentiment score between -1.0 and 1.0")
+    bullish_percentage: float
+    bearish_percentage: float
+    neutral_percentage: float
+    total_articles: int
+    articles: List[NewsArticle]
+
+

@@ -7,8 +7,6 @@ import {
   ActualVsPredictedChart,
   TrainingLossChart,
 } from "../components/StockChart.jsx";
-import RealtimeQuoteCard from "../components/RealtimeQuoteCard.jsx";
-import NewsSentimentCard from "../components/NewsSentimentCard.jsx";
 import { runPrediction } from "../api/client.js";
 
 export default function Predict() {
@@ -55,11 +53,6 @@ export default function Predict() {
 
       {result && (
         <div className="mt-12 space-y-10">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <RealtimeQuoteCard ticker={result.ticker} />
-            <NewsSentimentCard ticker={result.ticker} />
-          </div>
-
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="font-display text-xl font-semibold text-white">

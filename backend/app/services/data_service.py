@@ -145,3 +145,48 @@ def prepare_dataset(
         y_test=y_test,
         test_dates=test_dates,
     )
+
+
+def fetch_realtime_quote(ticker: str) -> dict:
+    """Fetch current/latest market quote for a given ticker."""
+    from datetime import datetime, timezone
+    logger.info(f"Fetching real-time quote for {ticker}")
+    t = yf.Ticker(ticker)
+
+    try:
+        fast = t.fast_info
+        price = float(fast.last_price or 0.0)
+        prev_close = float(fast.previous_close or price)
+        day_high = float(fast.day_high or price)
+        day_low = float(fast.day_low or price)
+        open_price = float(fast.open or price)
+        volume = int(fast.last_volume or 0)
+    except Exception:
+        hist = t.history(period="2d")
+        if hist.empty:
+            raise TickerNotFoundError(f"No real-time data found for ticker '{ticker}'")
+        latest = hist.iloc[-1]
+        prev = hist.iloc[-2] if len(hist) > 1 else latest
+        price = float(latest["Close"])
+        prev_close = float(prev["Close"])
+        day_high = float(latest["High"])
+        day_low = float(latest["Low"])
+        open_price = float(latest["Open"])
+        volume = int(latest["Volume"])
+
+    change = price - prev_close
+    percent_change = (change / prev_close * 100) if prev_close != 0 else 0.0
+
+    return {
+        "ticker": ticker.upper(),
+        "price": round(price, 2),
+        "change": round(change, 2),
+        "percent_change": round(percent_change, 2),
+        "day_high": round(day_high, 2),
+        "day_low": round(day_low, 2),
+        "open_price": round(open_price, 2),
+        "previous_close": round(prev_close, 2),
+        "volume": volume,
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+    }
+

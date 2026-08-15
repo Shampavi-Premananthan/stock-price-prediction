@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.logger import logger
-from app.routers import health, prediction
+from app.routers import health, news, prediction, realtime
 
 app = FastAPI(
     title="AI Stock Price Prediction and Analysis Platform",
@@ -31,6 +31,10 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(prediction.router)
+app.include_router(realtime.router)
+app.include_router(news.router)
+
+
 
 
 @app.on_event("startup")

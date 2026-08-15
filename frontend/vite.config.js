@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target,
           changeOrigin: true,
+          ws: true,
           secure: false,
           headers: {
             "ngrok-skip-browser-warning": "true",
