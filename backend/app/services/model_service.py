@@ -65,7 +65,6 @@ def get_or_train_model(
     if model_path.exists() and not request.force_retrain:
         logger.info(f"Loading cached {request.model_type.value} model from {model_path}")
         forecaster.load(model_path)
-        forecaster.history_ = {"loss": [], "val_loss": []}
         return forecaster
 
     logger.info(

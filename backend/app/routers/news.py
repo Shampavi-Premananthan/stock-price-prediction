@@ -23,6 +23,5 @@ def get_ticker_news(ticker: str) -> NewsSentimentResponse:
         return sentiment_data
     except Exception as exc:
         logger.exception(f"Error serving news endpoint for ticker '{ticker}'")
-        raise HTTPException(
-            status_code=500, detail=f"Failed to fetch news sentiment for {ticker}"
-        ) from exc
+        from app.services.news_service import _build_fallback_news
+        return _build_fallback_news(ticker)

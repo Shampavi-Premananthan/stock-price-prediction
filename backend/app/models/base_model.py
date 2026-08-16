@@ -76,8 +76,21 @@ class BaseForecaster(ABC):
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / f"{self.name}.keras"
         self.model.save(path)
+        if self.history_:
+            import json
+            history_path = directory / f"{self.name}_history.json"
+            with open(history_path, "w") as f:
+                json.dump(self.history_, f)
         return path
 
     def load(self, path: Path) -> "BaseForecaster":
         self.model = keras.models.load_model(path)
+        history_path = path.parent / f"{self.name}_history.json"
+        if history_path.exists():
+            import json
+            with open(history_path, "r") as f:
+                self.history_ = json.load(f)
+        else:
+            self.history_ = {"loss": [], "val_loss": []}
         return self
+
